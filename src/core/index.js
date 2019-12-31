@@ -19,7 +19,7 @@ Object.defineProperty(Vue.prototype, '$ssrContext', {
 // expose FunctionalRenderContext for ssr runtime helper installation
 Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
-})
+}) 
 
 Vue.version = '__VERSION__'
 

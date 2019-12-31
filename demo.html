@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="switchComp('child1')">组件1</button>
+        <button @click="switchComp('child2')">组件2</button>
+        <div>
+            <div v-if="chooseComponent == 'child1'">组件1:<input type="text" type="text" />/></div>
+            <div v-if="chooseComponent == 'child2'">组件2:<input type="text"/></div>
+        </div>
+        <keep-alive>
+            <component :is="chooseComponent"></component>
+        </keep-alive>
+    </div>
+    <script src="./dist/vue.js"></script> 
+      
+        <script>
+            var child1 = {
+                template: '<div>组件1:<input type="text"/></div>',
+            }
+            var child2 = {
+                template: '<keep-alive><div>组件2:<input type="text"/></div></keep-alive>'
+            }
+            var vm = new Vue({
+                el: '#app',
+                components: {
+                    child1,
+                    child2,
+                },
+                data() {
+                    return {
+                        chooseComponent: 'child1',
+                    }
+                },
+                methods: {
+                    switchComp(component) {
+                        this.chooseComponent = component;
+                    }
+                }
+            })
+        </script> 
+</body>
+</html>

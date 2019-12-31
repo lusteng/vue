@@ -42,11 +42,7 @@
     "release:weex": "bash scripts/release-weex.sh",
     "release:note": "node scripts/gen-release-note.js",
     "commit": "git-cz"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged",
-    "commit-msg": "node scripts/verify-commit-msg.js"
-  },
+  }, 
   "lint-staged": {
     "*.js": [
       "eslint --fix",

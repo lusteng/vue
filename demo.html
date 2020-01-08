@@ -7,16 +7,12 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="app">
-        <button @click="switchComp('child1')">组件1</button>
-        <button @click="switchComp('child2')">组件2</button>
-        <div>
-            <div v-if="chooseComponent == 'child1'">组件1:<input type="text" type="text" />/></div>
-            <div v-if="chooseComponent == 'child2'">组件2:<input type="text"/></div>
-        </div>
-        <keep-alive>
-            <component :is="chooseComponent"></component>
-        </keep-alive>
+    <div id="app"> 
+        <div>{{test.test.a}}</div>
+        <div>{{test.dddd}}</div>
+        <div>{{arr[3]}}</div>
+
+        <button @click="handleAdd">+</button>
     </div>
     <script src="./dist/vue.js"></script> 
       
@@ -34,13 +30,26 @@
                     child2,
                 },
                 data() {
-                    return {
-                        chooseComponent: 'child1',
+                    return { 
+                        num: "11",
+                        musite: "12122",
+                        test: {
+                            test: {
+                                a: 222,
+                                b: 3333
+                            }
+                        },
+                        arr: [1,3,4,5]
                     }
                 },
-                methods: {
-                    switchComp(component) {
-                        this.chooseComponent = component;
+                methods: { 
+                    handleAdd(){
+                        let _this = this
+                        this.test.test.a ++
+                        this.test.dddd = '3333'
+                        setTimeout(() => {
+                            this.arr[3] = this.test.test.a
+                        }, 100)
                     }
                 }
             })

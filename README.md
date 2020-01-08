@@ -7,6 +7,7 @@
  -->
 #### 阅读vue源码笔记， 更多理解看代码中的注释(2.x版本) 
 
+
 ### 浏览器debug常用功能
 ![avatar](https://github.com/lusteng/qs/blob/master/images/debug-demo.png)
 
@@ -26,8 +27,7 @@ initData 函数
 proxy 函数
 Object.defineProperty 代理绑定 绑定在this的_data上
 
-```
-
+```js  
     initLifecycle(vm)  
     initEvents(vm)
     initRender(vm)
@@ -41,4 +41,13 @@ Object.defineProperty 代理绑定 绑定在this的_data上
 
 ```
 
+### 数据响应式
 
+1. 在Observe中通过Object.defineProperty 将组件的data数据转变为可观测数据
+2. 将watcher存储在window.Dep.target 对象上
+3. 界面数据发生变更，对象的setter中监听到数据的变化，通知Dep.notice 触发watcher更新操作，更新界面变化
+
+Object.defineProperty的不足：
+    无法检测数组的push，pop等变化，vue正对数组的push，pop等方法进行一次封装，在方法内加入了监听变化
+    
+[https://nlrx-wjc.github.io/Learn-Vue-Source-Code/reactive/object.html#_4-%E4%BE%9D%E8%B5%96%E5%88%B0%E5%BA%95%E6%98%AF%E8%B0%81](https://nlrx-wjc.github.io/Learn-Vue-Source-Code/reactive/object.html#_4-%E4%BE%9D%E8%B5%96%E5%88%B0%E5%BA%95%E6%98%AF%E8%B0%81)

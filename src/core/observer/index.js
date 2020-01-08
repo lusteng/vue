@@ -34,6 +34,8 @@ export function toggleObserving (value: boolean) {
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
  */
+
+// 观察者对象，将数据经常一番处理后可观察
 export class Observer {
   value: any;
   dep: Dep;
@@ -42,8 +44,11 @@ export class Observer {
   constructor (value: any) {
     this.value = value
     this.dep = new Dep()
-    this.vmCount = 0
-    def(value, '__ob__', this)
+    this.vmCount = 0  
+
+    //给当前对象添加一个__ob__属性，记录本身的dep
+    def(value, '__ob__', this) 
+    
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods)
@@ -61,8 +66,9 @@ export class Observer {
    * getter/setters. This method should only be called when
    * value type is Object.
    */
+  // 将Obj key变为可侦测
   walk (obj: Object) {
-    const keys = Object.keys(obj)
+    const keys = Object.keys(obj)  
     for (let i = 0; i < keys.length; i++) {
       defineReactive(obj, keys[i])
     }
@@ -107,7 +113,10 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
  */
-// 定义观察者
+/**
+ * @description 执行观察者
+ * @param value 传入组件的data对象
+ */
 export function observe (value: any, asRootData: ?boolean): Observer | void {
   // 传入的值必须是一个对象且不是VNode的实例
   if (!isObject(value) || value instanceof VNode) {
@@ -122,7 +131,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     (Array.isArray(value) || isPlainObject(value)) &&
     Object.isExtensible(value) &&
     !value._isVue
-  ) {
+  ) { 
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -134,6 +143,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 /**
  * Define a reactive property on an Object.
  */
+// 将对象转换成可检测对象
 export function defineReactive (
   obj: Object,
   key: string,
@@ -143,7 +153,7 @@ export function defineReactive (
 ) {
   const dep = new Dep()
 
-  const property = Object.getOwnPropertyDescriptor(obj, key)
+  const property = Object.getOwnPropertyDescriptor(obj, key) 
   if (property && property.configurable === false) {
     return
   }
@@ -161,6 +171,7 @@ export function defineReactive (
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
+      console.log(Dep.target);
       if (Dep.target) {
         dep.depend()
         if (childOb) {
@@ -173,7 +184,9 @@ export function defineReactive (
       return value
     },
     set: function reactiveSetter (newVal) {
-      const value = getter ? getter.call(obj) : val
+      console.log('触发了更新操作额~~~');
+      const value = getter ? getter.call(obj) : val 
+      
       /* eslint-disable no-self-compare */
       if (newVal === value || (newVal !== newVal && value !== value)) {
         return

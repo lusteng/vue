@@ -3,6 +3,7 @@
 import type Watcher from './watcher'
 import { remove } from '../util/index'
 import config from '../config'
+import { log } from 'util';
 
 let uid = 0
 
@@ -20,7 +21,7 @@ export default class Dep {
     this.subs = []
   }
 
-  addSub (sub: Watcher) {
+  addSub (sub: Watcher) { 
     this.subs.push(sub)
   }
 
@@ -43,7 +44,7 @@ export default class Dep {
       // order
       subs.sort((a, b) => a.id - b.id)
     }
-    for (let i = 0, l = subs.length; i < l; i++) {
+    for (let i = 0, l = subs.length; i < l; i++) { 
       subs[i].update()
     }
   }
@@ -55,7 +56,7 @@ export default class Dep {
 Dep.target = null
 const targetStack = []
 
-export function pushTarget (target: ?Watcher) {
+export function pushTarget (target: ?Watcher) { 
   targetStack.push(target)
   Dep.target = target
 }

@@ -1,13 +1,13 @@
 /*!
  * Vue.js v2.6.10
- * (c) 2014-2019 Evan You
+ * (c) 2014-2020 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.Vue = factory());
-}(this, function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('util')) :
+  typeof define === 'function' && define.amd ? define(['util'], factory) :
+  (global = global || self, global.Vue = factory(global.util));
+}(this, function (util) { 'use strict';
 
   /*  */
 
@@ -718,7 +718,7 @@
     this.subs = [];
   };
 
-  Dep.prototype.addSub = function addSub (sub) {
+  Dep.prototype.addSub = function addSub (sub) { 
     this.subs.push(sub);
   };
 
@@ -741,7 +741,7 @@
       // order
       subs.sort(function (a, b) { return a.id - b.id; });
     }
-    for (var i = 0, l = subs.length; i < l; i++) {
+    for (var i = 0, l = subs.length; i < l; i++) { 
       subs[i].update();
     }
   };
@@ -752,7 +752,7 @@
   Dep.target = null;
   var targetStack = [];
 
-  function pushTarget (target) {
+  function pushTarget (target) { 
     targetStack.push(target);
     Dep.target = target;
   }
@@ -919,11 +919,16 @@
    * object's property keys into getter/setters that
    * collect dependencies and dispatch updates.
    */
+
+  // 观察者对象，将数据经常一番处理后可观察
   var Observer = function Observer (value) {
     this.value = value;
     this.dep = new Dep();
-    this.vmCount = 0;
-    def(value, '__ob__', this);
+    this.vmCount = 0;  
+
+    //给当前对象添加一个__ob__属性，记录本身的dep
+    def(value, '__ob__', this); 
+      
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods);
@@ -941,8 +946,9 @@
    * getter/setters. This method should only be called when
    * value type is Object.
    */
+  // 将Obj key变为可侦测
   Observer.prototype.walk = function walk (obj) {
-    var keys = Object.keys(obj);
+    var keys = Object.keys(obj);  
     for (var i = 0; i < keys.length; i++) {
       defineReactive(obj, keys[i]);
     }
@@ -986,7 +992,10 @@
    * returns the new observer if successfully observed,
    * or the existing observer if the value already has one.
    */
-  // 定义观察者
+  /**
+   * @description 执行观察者
+   * @param value 传入组件的data对象
+   */
   function observe (value, asRootData) {
     // 传入的值必须是一个对象且不是VNode的实例
     if (!isObject(value) || value instanceof VNode) {
@@ -1001,7 +1010,7 @@
       (Array.isArray(value) || isPlainObject(value)) &&
       Object.isExtensible(value) &&
       !value._isVue
-    ) {
+    ) { 
       ob = new Observer(value);
     }
     if (asRootData && ob) {
@@ -1013,6 +1022,7 @@
   /**
    * Define a reactive property on an Object.
    */
+  // 将对象转换成可检测对象
   function defineReactive (
     obj,
     key,
@@ -1022,7 +1032,7 @@
   ) {
     var dep = new Dep();
 
-    var property = Object.getOwnPropertyDescriptor(obj, key);
+    var property = Object.getOwnPropertyDescriptor(obj, key); 
     if (property && property.configurable === false) {
       return
     }
@@ -1040,6 +1050,7 @@
       configurable: true,
       get: function reactiveGetter () {
         var value = getter ? getter.call(obj) : val;
+        console.log(Dep.target);
         if (Dep.target) {
           dep.depend();
           if (childOb) {
@@ -1052,7 +1063,9 @@
         return value
       },
       set: function reactiveSetter (newVal) {
-        var value = getter ? getter.call(obj) : val;
+        console.log('触发了更新操作额~~~');
+        var value = getter ? getter.call(obj) : val; 
+        
         /* eslint-disable no-self-compare */
         if (newVal === value || (newVal !== newVal && value !== value)) {
           return
@@ -1910,9 +1923,10 @@
 
   var callbacks = [];
   var pending = false;
-
+  // 执行维持的回调函数队列
   function flushCallbacks () {
-    pending = false;
+    pending = false; 
+    
     var copies = callbacks.slice(0);
     callbacks.length = 0;
     for (var i = 0; i < copies.length; i++) {
@@ -1931,6 +1945,7 @@
   // where microtasks have too high a priority and fire in between supposedly
   // sequential events (e.g. #4521, #6690, which have workarounds)
   // or even between bubbling of the same event (#6566).
+  // 触发延时操作
   var timerFunc;
 
   // The nextTick behavior leverages the microtask queue, which can be accessed
@@ -1940,10 +1955,11 @@
   // completely stops working after triggering a few times... so, if native
   // Promise is available, we will use it:
   /* istanbul ignore next, $flow-disable-line */
+  // Promise.then、MutationObserver 和 setImmediate 三种异步缓存回调函数
   if (typeof Promise !== 'undefined' && isNative(Promise)) {
     var p = Promise.resolve();
-    timerFunc = function () {
-      p.then(flushCallbacks);
+    timerFunc = function () { 
+        p.then(flushCallbacks); 
       // In problematic UIWebViews, Promise.then doesn't completely break, but
       // it can get stuck in a weird state where callbacks are pushed into the
       // microtask queue but the queue isn't being flushed, until the browser
@@ -1985,7 +2001,7 @@
     };
   }
 
-  function nextTick (cb, ctx) {
+  function nextTick (cb, ctx) { 
     var _resolve;
     callbacks.push(function () {
       if (cb) {
@@ -5260,7 +5276,7 @@
       return pattern.indexOf(name) > -1
     } else if (typeof pattern === 'string') {
       return pattern.split(',').indexOf(name) > -1
-    } else if (isRegExp(pattern)) {
+    } else if (isRegExp(pattern)) {        
       return pattern.test(name)
     }
     /* istanbul ignore next */
@@ -5424,7 +5440,8 @@
     // this is used to identify the "base" constructor to extend all plain-object
     // components with in Weex's multi-instance scenarios.
     Vue.options._base = Vue;
-
+   
+    /* keep-alive */
     extend(Vue.options.components, builtInComponents);
 
     initUse(Vue);
@@ -5449,7 +5466,7 @@
   // expose FunctionalRenderContext for ssr runtime helper installation
   Object.defineProperty(Vue, 'FunctionalRenderContext', {
     value: FunctionalRenderContext
-  });
+  }); 
 
   Vue.version = '2.6.10';
 

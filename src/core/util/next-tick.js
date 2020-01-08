@@ -9,9 +9,10 @@ export let isUsingMicroTask = false
 
 const callbacks = []
 let pending = false
-
+// 执行维持的回调函数队列
 function flushCallbacks () {
-  pending = false
+  pending = false 
+  
   const copies = callbacks.slice(0)
   callbacks.length = 0
   for (let i = 0; i < copies.length; i++) {
@@ -30,6 +31,7 @@ function flushCallbacks () {
 // where microtasks have too high a priority and fire in between supposedly
 // sequential events (e.g. #4521, #6690, which have workarounds)
 // or even between bubbling of the same event (#6566).
+// 触发延时操作
 let timerFunc
 
 // The nextTick behavior leverages the microtask queue, which can be accessed
@@ -39,10 +41,11 @@ let timerFunc
 // completely stops working after triggering a few times... so, if native
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
+// Promise.then、MutationObserver 和 setImmediate 三种异步缓存回调函数
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
   const p = Promise.resolve()
-  timerFunc = () => {
-    p.then(flushCallbacks)
+  timerFunc = () => { 
+      p.then(flushCallbacks) 
     // In problematic UIWebViews, Promise.then doesn't completely break, but
     // it can get stuck in a weird state where callbacks are pushed into the
     // microtask queue but the queue isn't being flushed, until the browser
@@ -84,7 +87,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
-export function nextTick (cb?: Function, ctx?: Object) {
+export function nextTick (cb?: Function, ctx?: Object) { 
   let _resolve
   callbacks.push(() => {
     if (cb) {

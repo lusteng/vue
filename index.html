@@ -1,0 +1,52 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-19 19:17:30
+ * @LastEditTime: 2019-09-20 10:38:28
+ * @LastEditors: Please set LastEditors
+ -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <div>{{text}}</div>
+        <div v-if="show">显示</div> 
+        <button @click="add">+</button>
+        <button @click="showEl">显示</button>
+    </div>
+    <script src="./dist/vue.js"></script>
+    <script> 
+        new Vue({
+            el:'#app',
+            created() {
+                console.log(this.$mount);
+                this.$set('aa', 0, 'fff')
+            }, 
+            data(){
+                return {
+                    aa: ['f','ggg'],
+                    text: "323443",
+                    htmlStr: "ddd",
+                    copy: {
+                        a: '111'
+                    },
+                    show: false
+                }
+            }, 
+            methods: {
+                add(){
+                    this.text = '22222'
+                },
+                showEl(){
+                    this.show = true
+                }
+            },
+        })
+    </script>
+</body>
+</html>

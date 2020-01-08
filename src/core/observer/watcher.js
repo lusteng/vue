@@ -52,7 +52,7 @@ export default class Watcher {
     this.vm = vm
     if (isRenderWatcher) {
       vm._watcher = this
-    }
+    }  
     vm._watchers.push(this)
     // options
     if (options) {

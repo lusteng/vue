@@ -23,7 +23,7 @@ export function handleError (err: Error, vm: any, info: string) {
             } catch (e) {
               globalHandleError(e, cur, 'errorCaptured hook')
             }
-          }
+          } 
         }
       }
     }

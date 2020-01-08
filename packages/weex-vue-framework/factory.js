@@ -7317,7 +7317,7 @@ var TransitionGroup = {
       this.kept,
       false, // hydrating
       true // removeOnly (!important, avoids unnecessary moves)
-    );
+    ); 
     this._vnode = this.kept;
   },
 

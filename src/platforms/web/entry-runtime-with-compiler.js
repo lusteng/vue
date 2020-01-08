@@ -13,7 +13,7 @@ const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
-
+ 
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
@@ -22,6 +22,7 @@ Vue.prototype.$mount = function (
   el = el && query(el)
 
   /* istanbul ignore if */
+  //判断el是否是页面根元素
   if (el === document.body || el === document.documentElement) {
     process.env.NODE_ENV !== 'production' && warn(
       `Do not mount Vue to <html> or <body> - mount to normal elements instead.`
@@ -29,10 +30,14 @@ Vue.prototype.$mount = function (
     return this
   }
 
+ 
+  
   const options = this.$options
   // resolve template/el and convert to render function
+  // 判断是否传入render函数，没有代码写入一个
   if (!options.render) {
     let template = options.template
+    // 是否传入template
     if (template) {
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {

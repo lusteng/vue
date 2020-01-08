@@ -69,6 +69,7 @@ function initVirtualComponent (options: Object = {}) {
     callHook(vm, 'beforeMount')
 
     const updateComponent = () => {
+      console.log(`updateComponent 更新`);
       vm._update(vm._vnode, false)
     }
     new Watcher(vm, updateComponent, noop, null, true)

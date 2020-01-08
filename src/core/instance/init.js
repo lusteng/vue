@@ -49,13 +49,16 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
+    initLifecycle(vm)  
     initEvents(vm)
-    initRender(vm)
+    initRender(vm)  
+    //beforeCreate 之前执行了vue的一列表对象初始化操作
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props
-    initState(vm)
+    initState(vm) //初始化data 做了一系列处理
     initProvide(vm) // resolve provide after data/props
+
+    //created 之前执行了数据data，props的初始化操作
     callHook(vm, 'created')
 
     /* istanbul ignore if */

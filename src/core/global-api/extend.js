@@ -16,6 +16,7 @@ export function initExtend (Vue: GlobalAPI) {
   /**
    * Class inheritance
    */
+  // 创建一个新的构造器
   Vue.extend = function (extendOptions: Object): Function {
     extendOptions = extendOptions || {}
     const Super = this
@@ -32,7 +33,7 @@ export function initExtend (Vue: GlobalAPI) {
 
     const Sub = function VueComponent (options) {
       this._init(options)
-    }
+    } 
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
     Sub.cid = cid++

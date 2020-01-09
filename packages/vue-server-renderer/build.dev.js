@@ -1025,7 +1025,7 @@ function pushTarget (target) {
 }
 
 function popTarget () {
-  targetStack.pop();
+  targetStack.pop();  
   Dep.target = targetStack[targetStack.length - 1];
 }
 
@@ -8137,7 +8137,7 @@ function createComponent (
   }
 
   // install component management hooks onto the placeholder node
-  installComponentHooks(data);
+  installComponentHooks(data); 
 
   // return a placeholder vnode
   var name = Ctor.options.name || tag;

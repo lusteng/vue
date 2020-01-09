@@ -1,6 +1,6 @@
 /*!
  * Vue.js v2.6.10
- * (c) 2014-2019 Evan You
+ * (c) 2014-2020 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -718,7 +718,7 @@
     this.subs = [];
   };
 
-  Dep.prototype.addSub = function addSub (sub) {
+  Dep.prototype.addSub = function addSub (sub) { 
     this.subs.push(sub);
   };
 
@@ -741,7 +741,7 @@
       // order
       subs.sort(function (a, b) { return a.id - b.id; });
     }
-    for (var i = 0, l = subs.length; i < l; i++) {
+    for (var i = 0, l = subs.length; i < l; i++) { 
       subs[i].update();
     }
   };
@@ -752,7 +752,7 @@
   Dep.target = null;
   var targetStack = [];
 
-  function pushTarget (target) {
+  function pushTarget (target) { 
     targetStack.push(target);
     Dep.target = target;
   }
@@ -919,11 +919,16 @@
    * object's property keys into getter/setters that
    * collect dependencies and dispatch updates.
    */
+
+  // 观察者对象，将数据经常一番处理后可观察
   var Observer = function Observer (value) {
     this.value = value;
     this.dep = new Dep();
-    this.vmCount = 0;
-    def(value, '__ob__', this);
+    this.vmCount = 0;  
+
+    //给当前对象添加一个__ob__属性，记录本身的dep
+    def(value, '__ob__', this); 
+      
     if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods);
@@ -941,8 +946,9 @@
    * getter/setters. This method should only be called when
    * value type is Object.
    */
+  // 将Obj key变为可侦测
   Observer.prototype.walk = function walk (obj) {
-    var keys = Object.keys(obj);
+    var keys = Object.keys(obj);  
     for (var i = 0; i < keys.length; i++) {
       defineReactive(obj, keys[i]);
     }
@@ -986,7 +992,12 @@
    * returns the new observer if successfully observed,
    * or the existing observer if the value already has one.
    */
+  /**
+   * @description 执行观察者
+   * @param value 传入组件的data对象
+   */
   function observe (value, asRootData) {
+    // 传入的值必须是一个对象且不是VNode的实例
     if (!isObject(value) || value instanceof VNode) {
       return
     }
@@ -999,7 +1010,7 @@
       (Array.isArray(value) || isPlainObject(value)) &&
       Object.isExtensible(value) &&
       !value._isVue
-    ) {
+    ) { 
       ob = new Observer(value);
     }
     if (asRootData && ob) {
@@ -1011,6 +1022,10 @@
   /**
    * Define a reactive property on an Object.
    */
+<<<<<<< HEAD
+=======
+  // 将对象转换成可检测对象
+>>>>>>> 14cf37805fd71c809f3b0ae7d6b8b60f85b7c00f
   function defineReactive (
     obj,
     key,
@@ -1020,7 +1035,7 @@
   ) {
     var dep = new Dep();
 
-    var property = Object.getOwnPropertyDescriptor(obj, key);
+    var property = Object.getOwnPropertyDescriptor(obj, key); 
     if (property && property.configurable === false) {
       return
     }
@@ -1038,6 +1053,7 @@
       configurable: true,
       get: function reactiveGetter () {
         var value = getter ? getter.call(obj) : val;
+        console.log(Dep.target);
         if (Dep.target) {
           dep.depend();
           if (childOb) {
@@ -1050,7 +1066,9 @@
         return value
       },
       set: function reactiveSetter (newVal) {
-        var value = getter ? getter.call(obj) : val;
+        console.log('触发了更新操作额~~~');
+        var value = getter ? getter.call(obj) : val; 
+        
         /* eslint-disable no-self-compare */
         if (newVal === value || (newVal !== newVal && value !== value)) {
           return
@@ -1843,7 +1861,7 @@
               } catch (e) {
                 globalHandleError(e, cur, 'errorCaptured hook');
               }
-            }
+            } 
           }
         }
       }
@@ -3521,7 +3539,7 @@
     Vue.prototype.$nextTick = function (fn) {
       return nextTick(fn, this)
     };
-
+    // render函数
     Vue.prototype._render = function () {
       var vm = this;
       var ref = vm.$options;
@@ -3547,7 +3565,7 @@
         // when parent component is patched.
         currentRenderingInstance = vm;
         vnode = render.call(vm._renderProxy, vm.$createElement);
-      } catch (e) {
+      } catch (e) { 
         handleError(e, vm, "render");
         // return error render result,
         // or previous vnode to prevent render error causing blank component
@@ -4422,7 +4440,7 @@
     this.vm = vm;
     if (isRenderWatcher) {
       vm._watcher = this;
-    }
+    }  
     vm._watchers.push(this);
     // options
     if (options) {
@@ -4619,6 +4637,7 @@
     set: noop
   };
 
+  // 利用Object.defineProperty对数据代理绑定
   function proxy (target, sourceKey, key) {
     sharedPropertyDefinition.get = function proxyGetter () {
       return this[sourceKey][key]
@@ -4629,12 +4648,13 @@
     Object.defineProperty(target, key, sharedPropertyDefinition);
   }
 
+  // 初始化参数
   function initState (vm) {
     vm._watchers = [];
     var opts = vm.$options;
     if (opts.props) { initProps(vm, opts.props); }
     if (opts.methods) { initMethods(vm, opts.methods); }
-    if (opts.data) {
+    if (opts.data) { //初始化data参数
       initData(vm);
     } else {
       observe(vm._data = {}, true /* asRootData */);
@@ -4692,12 +4712,13 @@
     for (var key in propsOptions) loop( key );
     toggleObserving(true);
   }
-
+  //初始化data
   function initData (vm) {
     var data = vm.$options.data;
     data = vm._data = typeof data === 'function'
       ? getData(data, vm)
       : data || {};
+    // 错误兼容，值得参考，判断预期的对象类型，不符合返回个自己需要的空对象  
     if (!isPlainObject(data)) {
       data = {};
        warn(
@@ -4711,6 +4732,7 @@
     var props = vm.$options.props;
     var methods = vm.$options.methods;
     var i = keys.length;
+    // 检测data的key和props、methods的key不重合
     while (i--) {
       var key = keys[i];
       {
@@ -4727,7 +4749,8 @@
           "Use prop default value instead.",
           vm
         );
-      } else if (!isReserved(key)) {
+      // data key 首字符不是_或者$的进行数据绑定  
+      } else if (!isReserved(key)) { 
         proxy(vm, "_data", key);
       }
     }
@@ -4991,6 +5014,7 @@
       }
       // expose real self
       vm._self = vm;
+<<<<<<< HEAD
       // 初始化生命周期
       initLifecycle(vm);
       // 初始化事件
@@ -4998,13 +5022,26 @@
       // 初始化渲染
       initRender(vm);
       // 执行生命周期
+=======
+      initLifecycle(vm);  
+      initEvents(vm);
+      initRender(vm);  
+      //beforeCreate 之前执行了vue的一列表对象初始化操作
+>>>>>>> 14cf37805fd71c809f3b0ae7d6b8b60f85b7c00f
       callHook(vm, 'beforeCreate');
       // 执行injections初始化
       initInjections(vm); // resolve injections before data/props
+<<<<<<< HEAD
       // 初始化初始值
       initState(vm);
       initProvide(vm); // resolve provide after data/props
       // 执行生命周期
+=======
+      initState(vm); //初始化data 做了一系列处理
+      initProvide(vm); // resolve provide after data/props
+
+      //created 之前执行了数据data，props的初始化操作
+>>>>>>> 14cf37805fd71c809f3b0ae7d6b8b60f85b7c00f
       callHook(vm, 'created');
 
       /* istanbul ignore if */
@@ -5143,6 +5180,7 @@
     /**
      * Class inheritance
      */
+    // 创建一个新的构造器
     Vue.extend = function (extendOptions) {
       extendOptions = extendOptions || {};
       var Super = this;
@@ -5159,7 +5197,7 @@
 
       var Sub = function VueComponent (options) {
         this._init(options);
-      };
+      }; 
       Sub.prototype = Object.create(Super.prototype);
       Sub.prototype.constructor = Sub;
       Sub.cid = cid++;
@@ -11898,7 +11936,7 @@
     var el = query(id);
     return el && el.innerHTML
   });
-
+   
   var mount = Vue.prototype.$mount;
   Vue.prototype.$mount = function (
     el,
@@ -11907,6 +11945,7 @@
     el = el && query(el);
 
     /* istanbul ignore if */
+    //判断el是否是页面根元素
     if (el === document.body || el === document.documentElement) {
        warn(
         "Do not mount Vue to <html> or <body> - mount to normal elements instead."
@@ -11914,10 +11953,14 @@
       return this
     }
 
+   
+    
     var options = this.$options;
     // resolve template/el and convert to render function
+    // 判断是否传入render函数，没有代码写入一个
     if (!options.render) {
       var template = options.template;
+      // 是否传入template
       if (template) {
         if (typeof template === 'string') {
           if (template.charAt(0) === '#') {

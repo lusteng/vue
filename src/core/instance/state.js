@@ -35,6 +35,7 @@ const sharedPropertyDefinition = {
   set: noop
 }
 
+// 利用Object.defineProperty对数据代理绑定
 export function proxy (target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
@@ -45,12 +46,13 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+// 初始化参数
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
-  if (opts.data) {
+  if (opts.data) { //初始化data参数
     initData(vm)
   } else {
     observe(vm._data = {}, true /* asRootData */)
@@ -108,12 +110,13 @@ function initProps (vm: Component, propsOptions: Object) {
   }
   toggleObserving(true)
 }
-
+//初始化data
 function initData (vm: Component) {
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
+  // 错误兼容，值得参考，判断预期的对象类型，不符合返回个自己需要的空对象  
   if (!isPlainObject(data)) {
     data = {}
     process.env.NODE_ENV !== 'production' && warn(
@@ -127,6 +130,7 @@ function initData (vm: Component) {
   const props = vm.$options.props
   const methods = vm.$options.methods
   let i = keys.length
+  // 检测data的key和props、methods的key不重合
   while (i--) {
     const key = keys[i]
     if (process.env.NODE_ENV !== 'production') {
@@ -143,7 +147,8 @@ function initData (vm: Component) {
         `Use prop default value instead.`,
         vm
       )
-    } else if (!isReserved(key)) {
+    // data key 首字符不是_或者$的进行数据绑定  
+    } else if (!isReserved(key)) { 
       proxy(vm, `_data`, key)
     }
   }

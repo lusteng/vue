@@ -1,75 +1,56 @@
-# 1. 整体规划
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-19 11:23:33
+ * @LastEditTime: 2019-09-20 10:39:01
+ * @LastEditors: Please set LastEditors
+ -->
+#### 阅读vue源码笔记， 更多理解看代码中的注释(2.x版本) 
 
-## 1.1 源码学习目录
 
-本项目所分析的`Vue.js`源码版本是目前最新的版本，版本号为 v2.6.10 ，其代码目录如下：
+### 浏览器debug常用功能
+![avatar](https://github.com/lusteng/qs/blob/master/images/debug-demo.png)
 
-```bash
-├─dist                   # 项目构建后的文件
-├─scripts                # 与项目构建相关的脚本和配置文件 
-├─flow                   # flow的类型声明文件
-├─src                    # 项目源代码
-│    ├─complier          # 与模板编译相关的代码
-│    ├─core              # 通用的、与运行平台无关的运行时代码
-│    │  ├─observe        # 实现变化侦测的代码
-│    │  ├─vdom           # 实现virtual dom的代码
-│    │  ├─instance       # Vue.js实例的构造函数和原型方法
-│    │  ├─global-api     # 全局api的代码
-│    │  └─components     # 内置组件的代码
-│    ├─server            # 与服务端渲染相关的代码
-│    ├─platforms         # 特定运行平台的代码，如weex 
-│    ├─sfc               # 单文件组件的解析代码
-│    └─shared            # 项目公用的工具代码
-└─test                   # 项目测试代码
-```
+引入数据检查 flow工具
 
-从上面的目录结构可以看出，`Vue`的整个项目包含了类型检测相关、单元测试相关、与平台无关的核心代码以及跨平台运行的相关代码。
+ 
+new Vue 执行入口 src/core/index 
 
-由于我们只是学习`Vue.js`的设计思想以及代码实现的相关逻辑，所以我们暂不去关心类型检测、单元测试以及特定平台运行等相关逻辑实现，仅关注它的核心代码，即`src/core`和`src/complier`这两个目录下的代码，并且接下来后续的学习也都是只在这两个目录的范围之内。
-
-## 1.2 学习路线
-
-在学习之前，我们需要先制定一个学习路线，循序渐进的学习，这样不至于一头雾水，无处下手。后面的学习路线如下：
-
-1. 变化侦测篇
-
-   学习`Vue`中如何实现数据的响应式系统，从而达到数据驱动视图。
-
-2. 虚拟DOM篇
-
-   学习什么是虚拟DOM，以及`Vue`中的`DOM-Diff`原理
-
-3. 模板编译篇
-
-   学习`Vue`内部是怎么把`template`模板编译成虚拟`DOM`,从而渲染出真实`DOM`
-
-4. 实例方法篇
-
-   学习`Vue`中所有实例方法(即所有以`$`开头的方法)的实现原理
-
-5. 全局API篇
-
-   学习`Vue`中所有全局`API`的实现原理
-
-6. 生命周期篇
-
-   学习`Vue`中组件的生命周期实现原理
-
-7. 指令篇
-
-   学习`Vue`中所有指令的实现原理
-
-8. 过滤器篇
-
-   学习`Vue`中所有过滤器的实现原理
-
-9. 内置组件篇
-
-   学习`Vue`中所有内置组件的实现原理  
-
-### nextTick
-Promise.then、MutationObserver 和 setImmedi ate 维持一个异步队列，将多个nextTick回调合并到一个执行
 
 ### 入口 src/core/instance/index.js  初始化Vue对象
 
+初始化了一系列操作  E:\xuexi\vue\src\core\instance\init.js
+
+### 初始化data数据
+> 通过Object.defineProperty将data的key数据代理到vue对象的_data下，监听getter和setter  
+E:\xuexi\vue\src\core\instance\state.js
+initData 函数  
+将data绑定在this._data 上
+proxy 函数
+Object.defineProperty 代理绑定 绑定在this的_data上
+
+```js  
+    initLifecycle(vm)  
+    initEvents(vm)
+    initRender(vm)
+    //beforeCreate 之前执行了vue的一列表对象初始化操作
+    callHook(vm, 'beforeCreate')
+    initInjections(vm) // resolve injections before data/props
+    initState(vm) //初始化data 做了一系列处理
+    initProvide(vm) // resolve provide after data/props
+    //created 之前执行了数据data，props的初始化操作
+    callHook(vm, 'created')
+
+```
+
+### 数据响应式
+
+1. 在Observe中通过Object.defineProperty 将组件的data数据转变为可观测数据
+2. 将watcher存储在window.Dep.target 对象上
+3. 界面数据发生变更，对象的setter中监听到数据的变化，通知Dep.notice 触发watcher更新操作，更新界面变化
+
  
+Object.defineProperty的不足：
+    无法检测数组的push，pop等变化，vue正对数组的push，pop等方法进行一次封装，在方法内加入了监听变化
+    
+[https://nlrx-wjc.github.io/Learn-Vue-Source-Code/reactive/object.html#_4-%E4%BE%9D%E8%B5%96%E5%88%B0%E5%BA%95%E6%98%AF%E8%B0%81](https://nlrx-wjc.github.io/Learn-Vue-Source-Code/reactive/object.html#_4-%E4%BE%9D%E8%B5%96%E5%88%B0%E5%BA%95%E6%98%AF%E8%B0%81)

@@ -35,6 +35,7 @@ export function initMixin (Vue: Class<Component>) {
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
+      // 挂在$options属性
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -49,13 +50,20 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
+    // 初始化生命周期
     initLifecycle(vm)
+    // 初始化事件
     initEvents(vm)
+    // 初始化渲染
     initRender(vm)
+    // 执行生命周期
     callHook(vm, 'beforeCreate')
+    // 执行injections初始化
     initInjections(vm) // resolve injections before data/props
+    // 初始化初始值
     initState(vm)
     initProvide(vm) // resolve provide after data/props
+    // 执行生命周期
     callHook(vm, 'created')
 
     /* istanbul ignore if */
@@ -64,7 +72,7 @@ export function initMixin (Vue: Class<Component>) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-
+    // 开始挂在mount元素 
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

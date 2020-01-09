@@ -70,4 +70,6 @@
 ### nextTick
 Promise.then、MutationObserver 和 setImmedi ate 维持一个异步队列，将多个nextTick回调合并到一个执行
 
+### 入口 src/core/instance/index.js  初始化Vue对象
+
  

@@ -30,8 +30,7 @@ export function setActiveInstance(vm: Component) {
 }
 
 export function initLifecycle (vm: Component) {
-  const options = vm.$options
-
+  const options = vm.$options 
   // locate first non-abstract parent
   let parent = options.parent
   if (parent && !options.abstract) {
@@ -336,9 +335,9 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
 export function callHook (vm: Component, hook: string) {
   // #7573 disable dep collection when invoking lifecycle hooks
   pushTarget()
-  const handlers = vm.$options[hook]
+  const handlers = vm.$options[hook] 
   const info = `${hook} hook`
-  if (handlers) {
+  if (handlers) { 
     for (let i = 0, j = handlers.length; i < j; i++) {
       invokeWithErrorHandling(handlers[i], vm, null, vm, info)
     }

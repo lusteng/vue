@@ -61,6 +61,6 @@ export function pushTarget (target: ?Watcher) {
 }
 
 export function popTarget () {
-  targetStack.pop()
+  targetStack.pop() 
   Dep.target = targetStack[targetStack.length - 1]
 }

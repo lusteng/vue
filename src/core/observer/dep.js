@@ -29,7 +29,7 @@ export default class Dep {
     remove(this.subs, sub)
   }
 
-  depend () {
+  depend () { 
     if (Dep.target) {
       Dep.target.addDep(this)
     }
@@ -57,6 +57,7 @@ Dep.target = null
 const targetStack = []
 
 export function pushTarget (target: ?Watcher) { 
+  console.log(target)
   targetStack.push(target)
   Dep.target = target
 }

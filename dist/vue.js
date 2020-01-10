@@ -4,10 +4,10 @@
  * Released under the MIT License.
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.Vue = factory());
-}(this, (function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('util')) :
+  typeof define === 'function' && define.amd ? define(['util'], factory) :
+  (global = global || self, global.Vue = factory(global.util));
+}(this, (function (util) { 'use strict';
 
   /*  */
 
@@ -726,7 +726,7 @@
     remove(this.subs, sub);
   };
 
-  Dep.prototype.depend = function depend () {
+  Dep.prototype.depend = function depend () { 
     if (Dep.target) {
       Dep.target.addDep(this);
     }
@@ -753,6 +753,7 @@
   var targetStack = [];
 
   function pushTarget (target) { 
+    console.log(target);
     targetStack.push(target);
     Dep.target = target;
   }
@@ -946,7 +947,7 @@
    * getter/setters. This method should only be called when
    * value type is Object.
    */
-  // 将Obj key变为可侦测
+  // 实现object 可侦测
   Observer.prototype.walk = function walk (obj) {
     var keys = Object.keys(obj);  
     for (var i = 0; i < keys.length; i++) {
@@ -958,7 +959,8 @@
    * Observe a list of Array items.
    */
   Observer.prototype.observeArray = function observeArray (items) {
-    for (var i = 0, l = items.length; i < l; i++) {
+      
+    for (var i = 0, l = items.length; i < l; i++) { 
       observe(items[i]);
     }
   };
@@ -1022,10 +1024,7 @@
   /**
    * Define a reactive property on an Object.
    */
-<<<<<<< HEAD
-=======
   // 将对象转换成可检测对象
->>>>>>> 14cf37805fd71c809f3b0ae7d6b8b60f85b7c00f
   function defineReactive (
     obj,
     key,
@@ -1052,8 +1051,7 @@
       enumerable: true,
       configurable: true,
       get: function reactiveGetter () {
-        var value = getter ? getter.call(obj) : val;
-        console.log(Dep.target);
+        var value = getter ? getter.call(obj) : val; 
         if (Dep.target) {
           dep.depend();
           if (childOb) {
@@ -4224,7 +4222,7 @@
     }
   }
 
-  function callHook (vm, hook) {
+  function callHook (vm, hook) { 
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook]; 
@@ -4485,7 +4483,7 @@
   /**
    * Evaluate the getter, and re-collect dependencies.
    */
-  Watcher.prototype.get = function get () {
+  Watcher.prototype.get = function get () { 
     pushTarget(this);
     var value;
     var vm = this.vm;
@@ -4759,7 +4757,7 @@
   }
 
   function getData (data, vm) {
-    // #7573 disable dep collection when invoking data getters
+    // #7573 disable dep collection when invoking data getters 
     pushTarget();
     try {
       return data.call(vm, vm)
@@ -5014,7 +5012,6 @@
       }
       // expose real self
       vm._self = vm;
-<<<<<<< HEAD
       // 初始化生命周期
       initLifecycle(vm);
       // 初始化事件
@@ -5022,26 +5019,13 @@
       // 初始化渲染
       initRender(vm);
       // 执行生命周期
-=======
-      initLifecycle(vm);  
-      initEvents(vm);
-      initRender(vm);  
-      //beforeCreate 之前执行了vue的一列表对象初始化操作
->>>>>>> 14cf37805fd71c809f3b0ae7d6b8b60f85b7c00f
       callHook(vm, 'beforeCreate');
       // 执行injections初始化
       initInjections(vm); // resolve injections before data/props
-<<<<<<< HEAD
       // 初始化初始值
       initState(vm);
       initProvide(vm); // resolve provide after data/props
       // 执行生命周期
-=======
-      initState(vm); //初始化data 做了一系列处理
-      initProvide(vm); // resolve provide after data/props
-
-      //created 之前执行了数据data，props的初始化操作
->>>>>>> 14cf37805fd71c809f3b0ae7d6b8b60f85b7c00f
       callHook(vm, 'created');
 
       /* istanbul ignore if */
@@ -5455,7 +5439,7 @@
     Vue.nextTick = nextTick;
 
     // 2.6 explicit observable API
-    Vue.observable = function (obj) {
+    Vue.observable = function (obj) { 
       observe(obj);
       return obj
     };

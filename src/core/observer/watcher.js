@@ -98,7 +98,7 @@ export default class Watcher {
   /**
    * Evaluate the getter, and re-collect dependencies.
    */
-  get () {
+  get () { 
     pushTarget(this)
     let value
     const vm = this.vm

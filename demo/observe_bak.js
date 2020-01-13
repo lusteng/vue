@@ -16,8 +16,7 @@ const Observer = function(data) {
       enumerable: true,
       // 设置当前描述属性可被修改
       configurable: true,
-      get() {
-        console.log('in get');
+      get() { 
         // 调用依赖收集器中的addSub，用于收集当前属性与Watcher中的依赖关系
         dep.depend();
         return val;
@@ -28,7 +27,8 @@ const Observer = function(data) {
         }
         val = newVal;
         // 当值发生变更时，通知依赖收集器，更新每个需要更新的Watcher，
-        // 这里每个需要更新通过什么断定？dep.subs
+        // 这里每个需要更新通过什么断定？dep.subs 
+        
         dep.notify();
       }
     });
@@ -45,11 +45,11 @@ const Observer = function(data) {
       this._data = options.data.apply(this);
     }
     // 挂载函数
-    this.mount = function() {
+    this.mount = function() { 
       new Watcher(self, self.render);
     }
     // 渲染函数
-    this.render = function() {
+    this.render = function() { 
       with(self) {
         _data.test;
         _data.text;
@@ -69,8 +69,7 @@ const Observer = function(data) {
       dep.addSub(self);
     }
     // 更新方法，用于触发vm._render
-    this.update = function() {
-      console.log('in watcher update');
+    this.update = function() { 
       fn();
     }
     // 这里会首次调用vm._render，从而触发text的get
@@ -101,6 +100,8 @@ const Observer = function(data) {
     }
     // 通知收集器中所的所有Wathcer，调用其update方法
     this.notify = function() {
+      console.log(self.subs.length);
+      
       for (let i = 0; i < self.subs.length; i += 1) {
         self.subs[i].update();
       }
@@ -118,6 +119,7 @@ const Observer = function(data) {
    
   vue.mount(); // in get
   vue._data.text = '123';   
+  vue._data.test = '11111';   
 
 
   setTimeout(() => { 

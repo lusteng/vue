@@ -49,6 +49,9 @@ export default class Watcher {
     options?: ?Object,
     isRenderWatcher?: boolean
   ) {
+
+    console.log('watcher init');
+    
     this.vm = vm
     if (isRenderWatcher) {
       vm._watcher = this

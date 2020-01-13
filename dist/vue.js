@@ -753,7 +753,7 @@
   var targetStack = [];
 
   function pushTarget (target) { 
-    console.log(target);
+    console.log('pushTarget');
     targetStack.push(target);
     Dep.target = target;
   }
@@ -1046,7 +1046,7 @@
       val = obj[key];
     }
 
-    var childOb = !shallow && observe(val);
+    var childOb = !shallow && observe(val); 
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
@@ -4435,6 +4435,9 @@
     options,
     isRenderWatcher
   ) {
+
+    console.log('watcher init');
+      
     this.vm = vm;
     if (isRenderWatcher) {
       vm._watcher = this;

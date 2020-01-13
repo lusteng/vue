@@ -166,7 +166,7 @@ export function defineReactive (
     val = obj[key]
   }
 
-  let childOb = !shallow && observe(val)
+  let childOb = !shallow && observe(val) 
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,

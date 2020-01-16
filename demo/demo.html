@@ -1,7 +1,7 @@
 <!--
  * @Editors: Liu baitong
  * @Date: 2020-01-09 10:52:22
- * @LastEditTime : 2020-01-13 18:03:31
+ * @LastEditTime : 2020-01-15 18:56:19
  * @Description: 
  -->
 <!DOCTYPE html>
@@ -13,32 +13,23 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="app"> 
-        <div>{{test.test.a}}</div>
-        <div>{{test.dddd}}</div>
-        <div>{{arr[3]}}</div>
-
-        <button @click="handleAdd">+</button>
+    <div id="app">   
+        <span class="test" @click="handleShow" v-show="true">
+            <template>
+                <p @click="handleDelete">fdfffff</p>
+            </template>
+        </span>
+        <div>{{message}}</div>
     </div> 
     <script src="../dist/vue.js"></script>
       
-        <script>
-            var child1 = {
-                template: '<div>组件1:<input type="text"/></div>',
-            }
-            var child2 = {
-                template: '<keep-alive><div>组件2:<input type="text"/></div></keep-alive>'
-            }
+        <script> 
             var vm = new Vue({
-                el: '#app',
-                components: {
-                    child1,
-                    child2,
-                },
+                el: '#app', 
                 data() {
                     return { 
                         num: "11",
-                        musite: "12122",
+                        music: "12122",
                         test: {
                             test: {
                                 a: 222,
@@ -48,33 +39,23 @@
                         message: '',
                         arr: [1,3,4,5]
                     }
-                },
-                beforeCreate(){
-                    console.log('beforeCreate life cycle')
-                },
-                created(){
-                    console.log('created life cycle')
-                },
-                beforeMount(){
-                    console.log('beforeMount life cycle')
-                },
-                mounted(){
-                    console.log('mounted life cycle')
-                },
-
-                methods: { 
-                    handleAdd(){
-                        let _this = this
-                        this.test.test.a ++
-                        this.test.dddd = '3333'
-                        setTimeout(() => {
-                            this.arr[3] = this.test.test.a
-                        }, 100)
-
-                        this.message = 'fdsfsdf'
+                }, 
+                methods: {
+                    handleShow(){
+                        console.log('show')
                     }
                 }
             }) 
+            console.log(vm._uid);
+
+            let vm2 = new Vue({
+                el: '#app',
+                data(){
+                    return {}
+                }
+            })
+            console.log(vm2._uid);
+            
         </script> 
 </body>
 </html>

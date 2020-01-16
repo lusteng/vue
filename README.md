@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-19 11:23:33
- * @LastEditTime: 2019-09-20 10:39:01
- * @LastEditors: Please set LastEditors
+ * @LastEditTime : 2020-01-15 16:22:14
+ * @LastEditors  : Please set LastEditors
  -->
 #### 阅读vue源码笔记， 更多理解看代码中的注释(2.x版本) 
 
@@ -59,6 +59,38 @@ Object.defineProperty的不足：
 
 Q: 为什么vue没有引入做到遍历数组下标加入响应系统？
 A: 为了性能
+
+### 模板解析 (/src/compiler)
+> 在模板解析阶段主要做的工作是把用户在<template></template>标签内写的模板使用正则等方式解析成抽象语法树（AST）。而这一阶段在源码中对应解析器（parser）模块,将解析数据render到vdom中
+
+<img src="./image/compiler.png"/>
+
+
+### 虚拟dom （/src/core/vdom）
+
+Q: 什么是虚拟DOM
+所谓虚拟DOM，就是用一个JS对象来描述一个DOM节点，像如下示例：
+```html
+<div class="a" id="b">我是内容</div>
+
+{
+  tag:'div',        // 元素标签
+  attrs:{           // 属性
+    class:'a',
+    id:'b'
+  },
+  text:'我是内容',  // 文本内容
+  children:[]       // 子元素
+}
+```
+
+
+虚拟DOM好处：使用JS的计算性能来换取操作DOM所消耗的性能
+
+vue 虚拟DOM patch过程 
++ 创建节点：新的VNode中有而旧的oldVNode中没有，就在旧的oldVNode中创建。
++ 删除节点：新的VNode中没有而旧的oldVNode中有，就从旧的oldVNode中删除。
++ 更新节点：新的VNode和旧的oldVNode中都有，就以新的VNode为准，更新旧的oldVNode。
 
     
 [https://nlrx-wjc.github.io/Learn-Vue-Source-Code/reactive/object.html#_4-%E4%BE%9D%E8%B5%96%E5%88%B0%E5%BA%95%E6%98%AF%E8%B0%81](https://nlrx-wjc.github.io/Learn-Vue-Source-Code/reactive/object.html#_4-%E4%BE%9D%E8%B5%96%E5%88%B0%E5%BA%95%E6%98%AF%E8%B0%81)

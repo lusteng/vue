@@ -219,9 +219,9 @@ export function parse (
       /* istanbul ignore if */
       if (isIE && ns === 'svg') {
         attrs = guardIESVGBug(attrs)
-      }
-
-      let element: ASTElement = createASTElement(tag, attrs, currentParent)
+      } 
+      let element: ASTElement = createASTElement(tag, attrs, currentParent) 
+      
       if (ns) {
         element.ns = ns
       }
@@ -308,7 +308,7 @@ export function parse (
       closeElement(element)
     },
 
-    chars (text: string, start: number, end: number) {
+    chars (text: string, start: number, end: number) { 
       if (!currentParent) {
         if (process.env.NODE_ENV !== 'production') {
           if (text === template) {

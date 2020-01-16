@@ -9779,9 +9779,9 @@
         /* istanbul ignore if */
         if (isIE && ns === 'svg') {
           attrs = guardIESVGBug(attrs);
-        }
-
-        var element = createASTElement(tag, attrs, currentParent);
+        } 
+        var element = createASTElement(tag, attrs, currentParent); 
+        
         if (ns) {
           element.ns = ns;
         }
@@ -9869,6 +9869,7 @@
       },
 
       chars: function chars (text, start, end) {
+        console.log(("text:" + text)); 
         if (!currentParent) {
           {
             if (text === template) {
